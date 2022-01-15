@@ -1,3 +1,6 @@
+from typing import List
+
+
 class InfoMessage:
     """Информационное сообщение о тренировке"""
 
@@ -60,10 +63,6 @@ class Running(Training):
     coeff_calorie_1 = 18
     coeff_calorie_2 = 20
 
-    def __init__(self, action, duration, weight) -> None:
-        """Инициализация атрибутов класса родителя"""
-        super().__init__(action, duration, weight)
-
     def get_spent_calories(self) -> float:
         """Возвращает количество калорий за бег"""
         return (18 * self.get_mean_speed()
@@ -105,7 +104,7 @@ class Swimming(Training):
         return (self.get_mean_speed() + 1.1) * 2 * self.weight
 
 
-def read_package(workout_type: str, data: list) -> Training:
+def read_package(workout_type: str, data: List[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
     if workout_type == 'SWM':
         return Swimming(* data)
