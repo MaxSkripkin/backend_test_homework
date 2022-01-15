@@ -1,24 +1,24 @@
 class InfoMessage:
     """Информационное сообщение о тренировке"""
     def __init__(self,
-                 training_type: str,
-                 duration: float,
-                 distance: float,
-                 speed: float,
-                 calories: float) -> None:
-        self.training_type = training_type
-        self.duration = duration
-        self.distance = distance
-        self.speed = speed
-        self.calories = calories
+                training_type: str,
+                duration: float,
+                distance: float,
+                speed: float,
+                calories: float) -> None:
+                self.training_type = training_type
+                self.duration = duration
+                self.distance = distance
+                self.speed = speed
+                self.calories = calories
                  
     def get_message(self) -> str:
         """Информация о проделанной тренировке"""
         return(f'Тип тренировки: {self.training_type};'
-               f' Длительность: {self.duration:.3f} ч.;'
-               f' Дистанция: {self.distance:.3f} км;'
-               f' Ср. скорость: {self.speed:.3f} км/ч;'
-               f' Потрачено ккал: {self.calories:.3f}.')
+            f' Длительность: {self.duration:.3f} ч.;'
+            f' Дистанция: {self.distance:.3f} км;'
+            f' Ср. скорость: {self.speed:.3f} км/ч;'
+            f' Потрачено ккал: {self.calories:.3f}.')
 
 
 class Training:
@@ -26,13 +26,13 @@ class Training:
     M_IN_KM = 1000  # Константа для перевода значений из метров в километры
     LEN_STEP = 0.65  # Расстояние в шагах
     def __init__(self,
-                 action: int,
-                 duration: float,
-                 weight: float,
-                 ) -> None:
-        self.action = action
-        self.duration = duration
-        self.weight = weight       
+                action: int,
+                duration: float,
+                weight: float,
+                ) -> None:
+                self.action = action
+                self.duration = duration
+                self.weight = weight       
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
@@ -60,7 +60,7 @@ class Running(Training):
 
     def get_spent_calories(self) -> float:
         """Возвращает количество калорий за бег"""
-        # coeff_calorie_1 = 18, coeff_calorie_2 = 20
+        #  coeff_calorie_1 = 18, coeff_calorie_2 = 20
         return (18 * self.get_mean_speed() - 20) * self.weight / self.M_IN_KM * (self.duration * 60)
         
                 
@@ -69,7 +69,7 @@ class SportsWalking(Training):
     def __init__(self, action, duration, weight, height) ->None:
         """Инициализация атрибутов класса родителя"""
         super().__init__(action, duration, weight)
-        self.height = height  # Доп параметр - рост
+        self.height = height  #  Доп параметр - рост
 
     def get_spent_calories(self) :
         """Возвращает количество калорий за спорт ходьбу"""
@@ -83,8 +83,8 @@ class Swimming(Training):
     def __init__(self, action, duration, weight, length_pool, count_pool) ->None:
         """Инициализация атрибутов класса родителя"""
         super().__init__(action, duration, weight)
-        self.length_pool = length_pool  # Длина бассейна
-        self.count_pool = count_pool   # Сколько раз пользователь переплыл бассейн
+        self.length_pool = length_pool  #  Длина бассейна
+        self.count_pool = count_pool   #  Сколько раз пользователь переплыл бассейн
 
     def get_mean_speed(self) -> float:
         """Рассчитываем среднюю скорость"""
