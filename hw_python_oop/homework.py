@@ -57,6 +57,8 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
+    coeff_calorie_1 = 18
+    coeff_calorie_2 = 20
 
     def __init__(self, action, duration, weight) -> None:
         """Инициализация атрибутов класса родителя"""
@@ -64,8 +66,6 @@ class Running(Training):
 
     def get_spent_calories(self) -> float:
         """Возвращает количество калорий за бег"""
-        # coeff_calorie_1 = 18
-        # coeff_calorie_2 = 20
         return (18 * self.get_mean_speed()
                 - 20) * self.weight / self.M_IN_KM * (self.duration * 60)
 
