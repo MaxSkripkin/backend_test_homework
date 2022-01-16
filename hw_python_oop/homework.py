@@ -1,3 +1,6 @@
+from typing import List, Dict
+
+
 class InfoMessage:
     """Информационное сообщение о тренировке"""
 
@@ -24,8 +27,11 @@ class InfoMessage:
 
 class Training:
     """Базовый класс тренировки."""
-    M_IN_KM = 1000  # Константа для перевода значений из метров в километры
-    LEN_STEP = 0.65  # Расстояние в шагах
+    M_IN_KM = 1000
+    LEN_STEP = 0.65
+    COEFF_CALORIE_1 = 18
+    COEFF_CALORIE_2 = 20
+    TIME_M = 60
 
     def __init__(self,
                  action: int,
@@ -46,7 +52,7 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        pass
+        NotImplementedError
 
     def show_training_info(self) -> InfoMessage:
         """Сообщения о результатах тренировки"""
@@ -57,13 +63,12 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-    coeff_calorie_1 = 18
-    coeff_calorie_2 = 20
 
     def get_spent_calories(self) -> float:
         """Возвращает количество калорий за бег"""
-        return (18 * self.get_mean_speed()
-                - 20) * self.weight / self.M_IN_KM * (self.duration * 60)
+        return (self.COEFF_CALORIE_1 * self.get_mean_speed()
+                - self.COEFF_CALORIE_2) * self.weight / self.M_IN_KM * (
+                    self.duration * self.TIME_M)
 
 
 class SportsWalking(Training):
@@ -72,13 +77,13 @@ class SportsWalking(Training):
     def __init__(self, action, duration, weight, height) -> None:
         """Инициализация атрибутов класса родителя"""
         super().__init__(action, duration, weight)
-        self.height = height  # Доп параметр - рост
+        self.height = height
 
     def get_spent_calories(self):
         """Возвращает количество калорий за спорт ходьбу"""
         return (0.035 * self.weight
                 + (self.get_mean_speed() ** 2 // self.height)
-                * 0.029 * self.weight) * self.duration * 60
+                * 0.029 * self.weight) * self.duration * self.TIME_M
 
 
 class Swimming(Training):
@@ -89,8 +94,8 @@ class Swimming(Training):
                  length_pool, count_pool) -> None:
         """Инициализация атрибутов класса родителя"""
         super().__init__(action, duration, weight)
-        self.length_pool = length_pool  # Длина бассейна
-        self.count_pool = count_pool   # Сколько раз переплыл(а) бассейн
+        self.length_pool = length_pool
+        self.count_pool = count_pool
 
     def get_mean_speed(self) -> float:
         """Рассчитываем среднюю скорость"""
@@ -101,16 +106,14 @@ class Swimming(Training):
         return (self.get_mean_speed() + 1.1) * 2 * self.weight
 
 
-def read_package(workout_type: str, data: list) -> Training:
+def read_package(workout_type: str, data: List[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    if workout_type == 'SWM':
-        return Swimming(* data)
-    elif workout_type == 'RUN':
-        return Running(* data)
-    elif workout_type == 'WLK':
-        return SportsWalking(* data)
-    else:
-        return None
+    slovar: Dict = {
+        'SWM': Swimming,
+        'RUN': Running,
+        'WLK': SportsWalking
+    }
+    return slovar[workout_type](*data)
 
 
 def main(training: Training) -> None:
