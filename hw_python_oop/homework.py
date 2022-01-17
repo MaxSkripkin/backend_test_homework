@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import Dict, List
 
 
 class InfoMessage:
@@ -27,10 +27,15 @@ class InfoMessage:
 
 class Training:
     """Базовый класс тренировки."""
+    M_IN_KM: int
     M_IN_KM = 1000
+    LEN_STEP: float
     LEN_STEP = 0.65
+    COEFF_CALORIE_1: int
     COEFF_CALORIE_1 = 18
+    COEFF_CALORIE_2: int
     COEFF_CALORIE_2 = 20
+    TIME_M: int
     TIME_M = 60
 
     def __init__(self,
@@ -52,7 +57,7 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        NotImplementedError
+        raise NotImplementedError('Метод еще не реализован.')
 
     def show_training_info(self) -> InfoMessage:
         """Сообщения о результатах тренировки"""
@@ -73,6 +78,10 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
+    COEF_CAL_WALK_1: float
+    COEF_CAL_WALK_1 = 0.035
+    COEF_CAL_WALK_2: float
+    COEF_CAL_WALK_2 = 0.029
 
     def __init__(self, action, duration, weight, height) -> None:
         """Инициализация атрибутов класса родителя"""
@@ -81,14 +90,20 @@ class SportsWalking(Training):
 
     def get_spent_calories(self):
         """Возвращает количество калорий за спорт ходьбу"""
-        return (0.035 * self.weight
+        return (self.COEF_CAL_WALK_1 * self.weight
                 + (self.get_mean_speed() ** 2 // self.height)
-                * 0.029 * self.weight) * self.duration * self.TIME_M
+                * self.COEF_CAL_WALK_2 * self.weight
+                ) * self.duration * self.TIME_M
 
 
 class Swimming(Training):
     """Тренировка: плавание."""
-    LEN_STEP: float = 1.38
+    LEN_STEP: float
+    LEN_STEP = 1.38
+    CAL_SWIM_1: float
+    CAL_SWIM_1 = 1.1
+    CAL_SWIM_2: int
+    CAL_SWIM_2 = 2
 
     def __init__(self, action, duration, weight,
                  length_pool, count_pool) -> None:
@@ -99,21 +114,23 @@ class Swimming(Training):
 
     def get_mean_speed(self) -> float:
         """Рассчитываем среднюю скорость"""
-        return self.length_pool * self.count_pool / 1000 / self.duration
+        return self.length_pool * self.count_pool \
+            / self.M_IN_KM / self.duration
 
     def get_spent_calories(self) -> float:
         """Метод вернёт кол-во калорий"""
-        return (self.get_mean_speed() + 1.1) * 2 * self.weight
+        return (self.get_mean_speed() + self.CAL_SWIM_1
+                ) * self.CAL_SWIM_2 * self.weight
 
 
 def read_package(workout_type: str, data: List[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    slovar: Dict = {
+    workout: Dict = {
         'SWM': Swimming,
         'RUN': Running,
         'WLK': SportsWalking
     }
-    return slovar[workout_type](*data)
+    return workout[workout_type](*data)
 
 
 def main(training: Training) -> None:
